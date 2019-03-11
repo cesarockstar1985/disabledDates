@@ -1,46 +1,53 @@
-<?php
+<?php 
 
-	$dates = [
-						'03-02-2019 08:00',
-						'03-02-2019 09:00',
-						'03-02-2019 10:00',
-						'03-02-2019 11:00',
-						'03-02-2019 13:00',
-						'03-02-2019 14:00',
-						'03-02-2019 15:00',
-						'03-02-2019 16:00',
-						'03-02-2019 17:00',
-						'04-02-2019 08:00',
-						'05-02-2019 08:00',
-					];
+	$arr = [
+		"2019-03-03 08:00",
+		"2019-03-03 09:00",
+		"2019-03-03 10:00",
+		"2019-03-03 11:00",
+		"2019-03-03 13:00",
+		"2019-03-03 14:00",
+		"2019-03-03 15:00",
+		"2019-03-03 16:00",
+		"2019-03-03 17:00",
+		"2019-03-04 08:00"
+	];
 
-	$arr = [];
+	$date = '';
+	$count = 0;
 	$disabledDates = [];
 
-	foreach ($dates as $date => $value) {
-
-		$day  = date("d-m-Y", strtotime($value));
-		$hour = date("h:i", strtotime($value));
-
-		if (!in_array($day, $arr)) {
-			
-			$arr[$day] .= $hour.",";
-			array_fill_keys($arr, $day);
-
-		}
-
-	}
-
 	foreach ($arr as $a => $value) {
-		
-		$hours[$a] = explode(',', $value);
-		$count = count($hours[$a])-1;
+		$dateFormat = date("d-m-Y", strtotime($value));
 
-		if ($count > 8) {
-			array_push($disabledDates, $a);
+		if ($date != $dateFormat) {
+			$date = $dateFormat;
+		}else{
+			$date = $date;
+			$count++;
+			if ($count >= 8) {
+				array_push($disabledDates, $date);
+			}
 		}
+
+	}
+	
+	printPre(getEnabledHours());
+
+	function getEnabledHours(){
+		$enabledHours = [ "08:00", "09:00",	"10:00", "11:00", "13:00", "14:00",	"15:00", "16:00", "17:00" ];
+		$bookedHours = ["08:00"];
+
+		$result = array_diff($enabledHours, $bookedHours);
+
+		return $result;
 	}
 
-	print_r(json_encode($disabledDates));
+
+	function printPre($arr){
+		echo "<pre>";
+		var_dump($arr);
+		echo "</pre>";
+	}
 
 ?>
